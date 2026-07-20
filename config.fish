@@ -4,6 +4,8 @@ set -x EDITOR nvim
 
 # Add fuzzy-finding keybinds (ex: CTRL+T) to terminal.
 fzf --fish | source
+# Adds git fuzzy-finding shortcuts, which start with CTRL+G.
+source ~/.config/fzf-git/fzf-git.fish
 
 # Sync Fish Vi-mode copy+pasting to global clipboard.
 bind yy fish_clipboard_copy
