@@ -2,16 +2,30 @@ source /usr/share/cachyos-fish-config/cachyos-config.fish
 
 set -x EDITOR nvim
 
+# Add fuzzy-finding keybinds (ex: CTRL+T) to terminal.
 fzf --fish | source
 
+# Sync Fish Vi-mode copy+pasting to global clipboard.
+bind yy fish_clipboard_copy
+bind Y fish_clipboard_copy
+bind p fish_clipboard_paste
+
 set -g fish_key_bindings fish_vi_key_bindings
+
+# Paths
+# TODO: Not sure if `export` would be better here?
+abbr -a d 'cd ~/Downloads'
+abbr -a p 'cd ~/Projects/Code'
+abbr -a --position anywhere configFish '~/.config/fish/config.fish'
+abbr -a --position anywhere configNeovim '~/.config/nvim/lua/'
 
 # Some abbr taken from https://github.com/lewisacidic/fish-scripting 
 
 # REMINDER: cdh is cool!
 abbr --add - 'cd -'
-
+abbr -a rm 'trash-put'
 abbr -a sed sd
+abbr -a awk string
 abbr -a grep rg
 abbr -a find fd
 abbr -a vim nvim
@@ -19,6 +33,11 @@ abbr -a cat bat
 abbr -a ln 'ln -s'
 abbr -a rd 'rmdir'
 abbr -a md 'mkdir -p'
+
+# Credits to u/Nukesor: https://www.reddit.com/r/fishshell/comments/1he9bd8/comment/m21vq0d/
+abbr --add 'jf' 'sudo journalctl -f -u'
+abbr --add 'jb' 'sudo journalctl -b -u'
+abbr --add 'sys' 'sudo systemctl'
 
 alias l='eza -blF --git --header --group-directories-first --icons=auto --color=auto'
 alias d='dirs'
@@ -30,6 +49,13 @@ function fish_greeting
 end
 
 abbr -a xteink sudo setfacl -m u:demorome:rw /dev/ttyACM-1
+
+# Dotnet
+abbr -a dn 'dotnet'
+abbr -a dnr 'dotnet run'
+abbr -a dnb 'dotnet build'
+abbr -a dnc 'dotnet clean'
+abbr -a dnw 'dotnet watch'
 
 # Git
 # Mostly based on https://github.com/lewisacidic/fish-git-abbr
