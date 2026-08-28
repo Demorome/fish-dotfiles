@@ -1,5 +1,12 @@
 source /usr/share/cachyos-fish-config/cachyos-config.fish
 
+# Shortcuts to quick-open nvim with fuzzy file findinging.
+# Based on a tip from https://micahkepe.com/blog/workflow-automation/
+# For fzf, the -m flag allows us to select multiple files with TAB,
+# and then these will be put in open buffers when we open Neovim!
+abbr --add n 'nvim $(fzf -m --preview="bat --color=always {}")'
+abbr --add v 'nvim $(fzf -m --preview="bat --color=always {}")'
+
 fish_add_path /home/demorome/.dotnet/tools
 
 # Adapted from https://github.com/fish-shell/fish-shell/issues/4434#issuecomment-332626369
@@ -8,8 +15,8 @@ if status is-interactive
 # don't nest inside another tmux
 and not set -q TMUX
   # Adapted from https://unix.stackexchange.com/a/176885/347104
-  # Create session 'main' or attach to 'main' if already exists.
-  tmux new-session -A -s main
+  # Create session 'notes' or attach to it if it already exists.
+  tmux new-session -A -s notes
 end
 
 set -x EDITOR nvim
