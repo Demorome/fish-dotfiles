@@ -1,6 +1,19 @@
 source /usr/share/cachyos-fish-config/cachyos-config.fish
 
+fish_add_path /home/demorome/.dotnet/tools
+
+# Adapted from https://github.com/fish-shell/fish-shell/issues/4434#issuecomment-332626369
+# only run in interactive (not automated SSH for example)
+if status is-interactive
+# don't nest inside another tmux
+and not set -q TMUX
+  # Adapted from https://unix.stackexchange.com/a/176885/347104
+  # Create session 'main' or attach to 'main' if already exists.
+  tmux new-session -A -s main
+end
+
 set -x EDITOR nvim
+set -x MANPAGER "vim -M +MANPAGER -"
 
 # Add fuzzy-finding keybinds (ex: CTRL+T) to terminal.
 fzf --fish | source
@@ -12,7 +25,41 @@ bind yy fish_clipboard_copy
 bind Y fish_clipboard_copy
 bind p fish_clipboard_paste
 
+# Enable Vi keybinds
 set -g fish_key_bindings fish_vi_key_bindings
+
+# Show the mode in prompt
+# TODO: Show this after the path?: https://www.reddit.com/r/fishshell/comments/lfb6ua/vi_mode_indicator_configuration/
+function fish_mode_prompt
+  switch $fish_bind_mode
+    case default
+      set_color --bold red
+      echo '[N]'
+    case insert
+      set_color --bold green
+      echo '[I]'
+    case replace_one
+      set_color --bold green
+      echo '[R]'
+    case replace
+      set_color --bold bryellow
+      echo '[R]'
+    case visual
+      set_color --bold brmagenta
+      echo '[V]'
+    case operator f F t T
+      set_color --bold cyan
+      echo '[N]'
+    case '*'
+      set_color --bold red
+      echo '[?]'
+  end
+  set_color --reset
+  echo ' '
+end
+
+# Restores Tmux session: https://thedroidguy.com/how-to-manage-and-restore-tmux-sessions-in-linux-1263582
+alias mux='pgrep -vx tmux > /dev/null && tmux new -d -s delete-me && tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh && tmux kill-session -t delete-me && tmux attach || tmux attach'
 
 # Paths
 # TODO: Not sure if `export` would be better here?
@@ -61,7 +108,7 @@ abbr -a dnw 'dotnet watch'
 
 # Git
 # Mostly based on https://github.com/lewisacidic/fish-git-abbr
-abbr --add g git
+abbr --add g 'lazygit'
 
 abbr --add ga "git add -p"
 abbr --add gaa 'git add --all'
